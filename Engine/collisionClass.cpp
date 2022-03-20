@@ -1,6 +1,7 @@
 #include "collisionClass.h"
 
-
+using namespace DirectX;
+using namespace DirectX::PackedVector;
 
 CollisionClass::CollisionClass()
 {
@@ -14,10 +15,10 @@ CollisionClass::~CollisionClass()
 {
 }
 
-void CollisionClass::KnifeHit(bool keyDown, D3DXMATRIX viewMat)
+void CollisionClass::KnifeHit(bool keyDown, XMMATRIX viewMat)
 {
-	D3DXMatrixIdentity(&KnifeWorldPos);
-	D3DXMATRIX initialPos, initialRot, initialScale, cameraMat;
+	KnifeWorldPos = XMMatrixIdentity();
+	XMMATRIX initialPos, initialRot, initialScale, cameraMat;
 	float determ = 0.0f;
 
 	if (keyDown)
@@ -51,7 +52,7 @@ void CollisionClass::KnifeHit(bool keyDown, D3DXMATRIX viewMat)
 	D3DXMatrixMultiply(&KnifeWorldPos, &initialPos, &cameraMat);
 }
 
-bool CollisionClass::DistanceCollision(D3DXMATRIX ball)
+bool CollisionClass::DistanceCollision(XMMATRIX ball)
 {
 	D3DXMatrixDecompose(&knifeScale, &knifeRot, &knifeLoc, &GetKnifePos());
 	//float length = knifeLoc.y;
@@ -61,11 +62,11 @@ bool CollisionClass::DistanceCollision(D3DXMATRIX ball)
 	//float radius = (ballLoc.x / 2.0f);
 	float radius = 4.0f; //5.0f
 
-	D3DXVECTOR3 subtract;
+	XMVECTOR subtract;
 
-	D3DXVec3Subtract(&subtract, &ballLoc, &knifeLoc);
+	subtract = XMVectorSubtract(ballLoc, knifeLoc);
 
-	float distance = D3DXVec3Length(&subtract);
+	XMVECTOR distance = XMVector3Length(subtract);
 
 	/*if the distance between the length of the knife and centre of the ball is less than the ball's
 	radius then return true for collision*/
@@ -78,12 +79,12 @@ bool CollisionClass::DistanceCollision(D3DXMATRIX ball)
 	return false;
 }
 
-D3DXMATRIX CollisionClass::GetKnifePos()
+XMMATRIX CollisionClass::GetKnifePos()
 {
 	return KnifeWorldPos;
 }
 
-D3DXMATRIX CollisionClass::GetKnifeDir()
+XMMATRIX CollisionClass::GetKnifeDir()
 {
 	return KnifeDir;
 }

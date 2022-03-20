@@ -9,7 +9,8 @@
 // INCLUDES //
 //////////////
 #include <d3d11.h>
-#include <d3dx10math.h>
+#include <DirectXMath.h>
+#include <DirectXPackedVector.h>
 #include <fstream>
 using namespace std;
 
@@ -34,8 +35,8 @@ private:
 
 	struct VertexType
 	{
-		D3DXVECTOR3 position;
-	    D3DXVECTOR2 texture;
+		DirectX::XMFLOAT3 position;
+	    DirectX::XMFLOAT3 texture;
 	};
 
 public:

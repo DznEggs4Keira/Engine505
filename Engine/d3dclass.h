@@ -20,7 +20,8 @@
 #include <dxgi.h>
 #include <d3dcommon.h>
 #include <d3d11.h>
-#include <d3dx10math.h>
+#include <DirectXMath.h>
+#include <DirectXPackedVector.h>
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -35,16 +36,16 @@ public:
 
 	bool Initialize(int, int, bool, HWND, bool, float, float);
 	void Shutdown();
-	
+
 	void BeginScene(float, float, float, float);
 	void EndScene();
 
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetDeviceContext();
 
-	void GetProjectionMatrix(D3DXMATRIX&);
-	void GetWorldMatrix(D3DXMATRIX&);
-	void GetOrthoMatrix(D3DXMATRIX&);
+	void GetProjectionMatrix(DirectX::XMMATRIX&);
+	void GetWorldMatrix(DirectX::XMMATRIX&);
+	void GetOrthoMatrix(DirectX::XMMATRIX&);
 
 	void GetVideoCardInfo(char*, int&);
 
@@ -75,14 +76,13 @@ private:
 
 	ID3D11RasterizerState* m_rasterStateNoCulling;
 
-	D3DXMATRIX m_projectionMatrix;
-	D3DXMATRIX m_worldMatrix;
-	D3DXMATRIX m_orthoMatrix;
+	DirectX::XMMATRIX m_projectionMatrix;
+	DirectX::XMMATRIX m_worldMatrix;
+	DirectX::XMMATRIX m_orthoMatrix;
 	ID3D11DepthStencilState* m_depthDisabledStencilState;
 	ID3D11BlendState* m_alphaEnableBlendingState;
 	ID3D11BlendState* m_alphaDisableBlendingState;
 
 	D3D11_VIEWPORT m_viewport;
 };
-
 #endif

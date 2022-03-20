@@ -3,6 +3,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "applicationclass.h"
 
+using namespace DirectX;
+using namespace DirectX::PackedVector;
 
 ApplicationClass::ApplicationClass()
 {
@@ -77,7 +79,7 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 
 	bool result;
 	float cameraX, cameraY, cameraZ;
-	D3DXMATRIX TextViewMatrix;
+	XMMATRIX TextViewMatrix;
 	
 	char videoCard[128];
 	int videoMemory;
@@ -569,7 +571,7 @@ void ApplicationClass::Shutdown()
 bool ApplicationClass::Frame()
 {
 	bool result, foundHeight;
-	D3DXVECTOR3 position;
+	XMFLOAT3 position;
 	static bool isEKeyPressed = false;
 	static bool isQKeyPressed = false;
 	float height;
@@ -690,7 +692,7 @@ bool ApplicationClass::HandleInput(float frameTime)
 {
 	bool keyDown, result;
 	float posX, posY, posZ, rotX, rotY, rotZ;
-	D3DXVECTOR3 Rot, tempRot;
+	XMFLOAT3 Rot, tempRot;
 
 	//need this for the water to make it wave
 	elapsedTime += frameTime;
@@ -713,7 +715,7 @@ bool ApplicationClass::HandleInput(float frameTime)
 	
 	//Camera rotation via mouse
 	Rot = m_Input->GetMouseMovement();
-	tempRot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	tempRot = XMFLOAT3(0.0f, 0.0f, 0.0f);
 
 	tempRot.x += Rot.x * 1 / 10;
 	tempRot.y += Rot.y * 1 / 10;
@@ -761,12 +763,12 @@ bool ApplicationClass::HandleInput(float frameTime)
 
 void ApplicationClass::RenderRefractionToTexture()
 {
-	D3DXVECTOR4 clipPlane;
-	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix;
+	XMFLOAT4 clipPlane;
+	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
 
 
 	// Setup a clipping plane based on the height of the water to clip everything above it to create a refraction.
-	clipPlane = D3DXVECTOR4(0.0f, -1.0f, 0.0f, /*Water Height is 1*/1.0f + 0.1f);
+	clipPlane = XMFLOAT4(0.0f, -1.0f, 0.0f, /*Water Height is 1*/1.0f + 0.1f);
 
 	// Set the render target to be the refraction render to texture.
 	m_RefractionTexture->SetRenderTarget(m_Direct3D->GetDeviceContext());
@@ -811,13 +813,13 @@ void ApplicationClass::RenderRefractionToTexture()
 
 void ApplicationClass::RenderReflectionToTexture()
 {
-	D3DXVECTOR4 clipPlane;
-	D3DXMATRIX reflectionViewMatrix, worldMatrix, projectionMatrix, pos;
-	D3DXVECTOR3 cameraPosition;
+	XMFLOAT4 clipPlane;
+	XMMATRIX reflectionViewMatrix, worldMatrix, projectionMatrix, pos;
+	XMFLOAT3 cameraPosition;
 
 
 	// Setup a clipping plane based on the height of the water to clip everything below it.
-	clipPlane = D3DXVECTOR4(0.0f, 1.0f, 0.0f, -1.0f/*1 is the water height*/);
+	clipPlane = XMFLOAT4(0.0f, 1.0f, 0.0f, -1.0f/*1 is the water height*/);
 
 	// Set the render target to be the reflection render to texture.
 	m_ReflectionTexture->SetRenderTarget(m_Direct3D->GetDeviceContext());
@@ -843,7 +845,7 @@ void ApplicationClass::RenderReflectionToTexture()
 	cameraPosition.y = -cameraPosition.y + (1.0f/*1 is the water height*/ * 2.0f);
 
 	// Translate the sky dome and sky plane to be centered around the reflected camera position.
-	D3DXMatrixTranslation(&worldMatrix, cameraPosition.x, cameraPosition.y, cameraPosition.z);
+	worldMatrix = XMMatrixTranslation(cameraPosition.x, cameraPosition.y, cameraPosition.z);
 
 	// Turn off back face culling and the Z buffer.
 	m_Direct3D->TurnOffCulling();	m_Direct3D->TurnOnAlphaBlending();	m_Direct3D->TurnZBufferOff();
@@ -903,7 +905,7 @@ void ApplicationClass::RenderReflectionToTexture()
 
 bool ApplicationClass::RenderGraphics(bool PPE1, bool PPE2)
 {
-	D3DXMATRIX renderTextureMatrix, textMatrix, orthoMatrix;
+	XMMATRIX renderTextureMatrix, textMatrix, orthoMatrix;
 	bool result;
 
 	//There are three render steps. First render the refraction of the scene to a texture. Next render the reflection of the scene to a texture.
@@ -945,7 +947,7 @@ bool ApplicationClass::RenderGraphics(bool PPE1, bool PPE2)
 		//Get the view matrix which we set up in the initialize
 		m_PostProcessWindow->GetPostProcessMatrix(m_PostProcessMatrix);
 		//Render to texture is an identity matrix
-		D3DXMatrixIdentity(&renderTextureMatrix);
+		renderTextureMatrix = XMMatrixIdentity();
 		//Get the ortho matrix
 		m_PostProcessTarget->GetOrthoMatrix(orthoMatrix);
 
@@ -1023,15 +1025,15 @@ bool ApplicationClass::RenderGraphics(bool PPE1, bool PPE2)
 
 bool ApplicationClass::SceneRender()
 {
-	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix, reflectionViewMatrix;
-	D3DXVECTOR3 cameraPosition;
-	D3DXMATRIX pos;
+	XMMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix, reflectionViewMatrix;
+	XMFLOAT3 cameraPosition;
+	XMMATRIX pos;
 	static float rotation = 0.0f;
 
 	bool result;
 
 	// Update the rotation variable each frame. --- for sun/moon model
-	rotation += ((float)D3DX_PI * 0.3f);
+	rotation += ((float)XM_PI * 0.3f);
 	if (rotation > 360.0f)
 	{
 		rotation -= 360.0f;
@@ -1061,7 +1063,7 @@ bool ApplicationClass::SceneRender()
 	cameraPosition = m_Camera->GetPosition();
 
 	// Translate the sky dome to be centered around the camera position.
-	D3DXMatrixTranslation(&worldMatrix, cameraPosition.x, cameraPosition.y, cameraPosition.z);
+	worldMatrix = XMMatrixTranslation(cameraPosition.x, cameraPosition.y, cameraPosition.z);
 
 	//Before rendering the sky dome we turn off both back face culling and the Z buffer.
 
@@ -1084,9 +1086,9 @@ bool ApplicationClass::SceneRender()
 
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
-	D3DXMatrixScaling(&worldMatrix, 40.0f, 40.0f, 40.0f);
-	D3DXMatrixTranslation(&pos, 40.0f, 50.0f, 800.0f);
-	D3DXMatrixMultiply(&worldMatrix, &worldMatrix, &pos);
+	worldMatrix = XMMatrixScaling(40.0f, 40.0f, 40.0f);
+	pos = XMMatrixTranslation(40.0f, 50.0f, 800.0f);
+	worldMatrix = XMMatrixMultiply(worldMatrix, pos);
 
 	m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
 		m_Model->GetTexture(), m_Light->GetDirection(), m_Light->GetDiffuseColor());
@@ -1124,7 +1126,7 @@ bool ApplicationClass::SceneRender()
 	m_Direct3D->GetWorldMatrix(worldMatrix);
 
 	// Translate to the location of the water and render it.
-	D3DXMatrixTranslation(&worldMatrix, 0.0f, 1.0f/*1 is the water height*/, 0.0f);
+	worldMatrix = XMMatrixTranslation(0.0f, 1.0f/*1 is the water height*/, 0.0f);
 
 	m_Camera->RenderReflection(1.0f);
 	m_Camera->GetReflectionViewMatrix(reflectionViewMatrix);
@@ -1184,7 +1186,7 @@ void ApplicationClass::ThrowKnives()
 {
 	bool result, keyDown = false;
 
-	D3DXMATRIX knifeViewMat, projectionMatrix;
+	XMMATRIX knifeViewMat, projectionMatrix;
 
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 

@@ -9,7 +9,8 @@
 // INCLUDES //
 //////////////
 #include <d3d11.h>
-#include <d3dx10math.h>
+#include <DirectXMath.h>
+#include <DirectXPackedVector.h>
 #include <fstream>
 #include <random>
 

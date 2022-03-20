@@ -118,7 +118,7 @@ private:
 	OrthoWindowClass* m_PostProcessWindow;
 	TextureShaderClass* m_TextureShader;
 	OtherTextureShaderClass* m_OtherTextureShader;
-	D3DXMATRIX m_PostProcessMatrix;
+	DirectX::XMMATRIX m_PostProcessMatrix;
 
 	VolumetricShaderClass* m_VolumetricShader;
 
@@ -131,8 +131,8 @@ private:
 	//Collisison Models
 	std::vector<ModelClass*> m_Volumetric; //balls
 
-	std::vector<D3DXVECTOR3> scaleVal; //scale of balls
-	std::vector<D3DXVECTOR3> posVal; // position of balls
+	std::vector<DirectX::XMFLOAT3> scaleVal; //scale of balls
+	std::vector<DirectX::XMFLOAT3> posVal; // position of balls
 	
 	std::vector<bool> volDest; // destroyed or not
 

@@ -1,6 +1,7 @@
 #pragma once
 #include "d3d11.h"
-#include "D3DX10math.h"
+#include <DirectXMath.h>
+#include <DirectXPackedVector.h>
 
 #include <vector>
 
@@ -11,23 +12,23 @@ public:
 	CollisionClass(const CollisionClass&);
 	~CollisionClass();
 
-	void KnifeHit(bool keyDown, D3DXMATRIX viewMat);
+	void KnifeHit(bool keyDown, DirectX::XMMATRIX viewMat);
 
-	bool DistanceCollision(D3DXMATRIX ball);
+	bool DistanceCollision(DirectX::XMMATRIX ball);
 
-	D3DXMATRIX GetKnifePos();
-	D3DXMATRIX GetKnifeDir();
+	DirectX::XMMATRIX GetKnifePos();
+	DirectX::XMMATRIX GetKnifeDir();
 
 private:
 
 	//transforms of ball and knife
-	D3DXVECTOR3 knifeLoc, ballLoc;
-	D3DXQUATERNION knifeRot, ballRot;
-	D3DXVECTOR3 knifeScale, ballScale;
+	DirectX::XMFLOAT3 knifeLoc, ballLoc;
+	DirectX::XMVECTOR knifeRot, ballRot;
+	DirectX::XMFLOAT3 knifeScale, ballScale;
 
 	//the knife
-	D3DXMATRIX KnifeWorldPos;
-	D3DXMATRIX KnifeDir;
-	D3DXVECTOR3 tempKnifePos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	DirectX::XMMATRIX KnifeWorldPos;
+	DirectX::XMMATRIX KnifeDir;
+	DirectX::XMFLOAT3 tempKnifePos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
 };
 

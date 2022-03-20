@@ -22,7 +22,8 @@
 // INCLUDES //
 //////////////
 #include <d3d11.h>
-#include <D3DX10math.h>
+#include <DirectXMath.h>
+#include <DirectXPackedVector.h>
 #include <dinput.h>
 
 
@@ -52,7 +53,7 @@ public:
 	bool IsDownPressed(); // look down
 
 	//rotate camera via mouse
-	D3DXVECTOR3 GetMouseMovement();
+	DirectX::XMFLOAT3 GetMouseMovement();
 
 	//Hitting
 	bool IsEPressed();
